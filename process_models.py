@@ -2,10 +2,12 @@ from pathlib import Path
 import definitions
 import dlib
 import face_recognition
-#import multiprocessing
+# import multiprocessing
 import os
 import pickle
 import time
+
+from definitions import standardize_frame
 
 Model = definitions.RecognitionModel
 
@@ -82,8 +84,11 @@ def get_encoding(file: str):
     start = time.time()
 
     img = face_recognition.load_image_file(file)
-    locations = face_recognition.face_locations(img, 1, "cnn")
-    encodings = face_recognition.face_encodings(img, locations, 1, "large")
+
+    frame = standardize_frame(img)
+
+    locations = face_recognition.face_locations(frame, 1, "cnn")
+    encodings = face_recognition.face_encodings(frame, locations)
 
     end = time.time()
 
