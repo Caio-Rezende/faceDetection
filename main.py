@@ -1,24 +1,32 @@
-import sys
-import file
-import webcam
+import detect
+import fix
 import process_models
+import view
+import webcam
+from process_parser import get_args
+
+args = get_args()
 
 
 def main():
-    if len(sys.argv) != 2:
-        print("Only one argument accepted (file, webcam, remake, f, w, r)")
+    if args.module == 'detect':
+        detect.call()
         return
 
-    if sys.argv[1] in ['f', 'file']:
-        file.call()
-        return
-
-    if sys.argv[1] in ['w', 'webcam']:
+    if args.module == 'webcam':
         webcam.call()
         return
 
-    if sys.argv[1] in ['r', 'remake']:
+    if args.module == 'remake':
         process_models.remake()
+        return
+
+    if args.module == 'view':
+        view.call(args.indices)
+        return
+
+    if args.module == 'fix':
+        fix.call()
         return
 
 

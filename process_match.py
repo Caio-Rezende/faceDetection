@@ -3,34 +3,61 @@ import numpy as np
 
 import face_recognition
 import process_models
-from definitions import FaceLocation, FaceEncoding
+from definitions import FaceEncoding, RecognitionModel
+from process_models import append_model, update_models
+from process_parser import get_args
+
+args = get_args()
 
 default_name = None
-font = cv2.FONT_HERSHEY_DUPLEX
-
-box_thickness = 2
-box_color = (0, 0, 255)
 
 models = process_models.load_models()
 known_models = [model.encoding for model in models]
 
 
-def call(frame: cv2.Mat):
+def call(frame: cv2.Mat, path: str) -> list[RecognitionModel]:
+    global models, known_models
+    matches: list[RecognitionModel] = []
+
     face_locations = face_recognition.face_locations(frame, 1, "cnn")
     face_encodings = face_recognition.face_encodings(
         frame, face_locations)
 
     for (face_location, face_encoding) in zip(face_locations, face_encodings):
         name = get_match_name(face_encoding)
+        model = RecognitionModel(face_encoding, face_location, name, path)
+        matches.append(model)
 
-        draw_box_face(frame, face_location, name)
+        if (not name is None) and args.save:
+            append_model(models, model, frame[:, :, ::-1])
+        else:
+            if args.unknown:
+                unkowns = set([a.name for a in
+                               filter(lambda a: a.name.count('unknown') > 0, models)])
+                if len(unkowns) == 0:
+                    unknownIndex = 0
+                else:
+                    unknownIndex = 1 + max(
+                        [int(unknown.replace('unknown-', '')) for unknown in unkowns])
+                name = f'unknown-{unknownIndex:03}'
+                model.name = name
+                append_model(models, model, frame[:, :, ::-1])
+                del unkowns, unknownIndex
 
-        del name
+        del name, model
 
     del face_locations, face_encodings
 
+    if len(known_models) != len(models):
+        update_models(models)
+        known_models = [model.encoding for model in models]
+
+    return matches
+
 
 def get_match_name(face_encoding: FaceEncoding):
+    global models, known_models
+
     name = default_name
 
     matches = face_recognition.compare_faces(
@@ -45,16 +72,3 @@ def get_match_name(face_encoding: FaceEncoding):
     del matches, face_distances, best_match_index
 
     return name
-
-
-def draw_box_face(frame: cv2.Mat, face_location: FaceLocation, name: str | None):
-    (top, right, bottom, left) = face_location
-
-    cv2.rectangle(frame, (left, top), (right, bottom),
-                  box_color, box_thickness)
-
-    if not name is None:
-        cv2.putText(frame, name, (left + 6, bottom - 6),
-                    font, 1.0, (255, 255, 255), 1)
-
-    del top, right, bottom, left

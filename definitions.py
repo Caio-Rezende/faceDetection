@@ -8,21 +8,23 @@ max_output_size = 720
 
 
 class RecognitionModel:
-    def __init__(obj, encoding, name: str, file: str):
+    def __init__(obj, encoding: FaceEncoding, location: FaceLocation, name: str, path: str | None = None):
         obj.encoding = encoding
+        obj.location = location
         obj.name = name
-        obj.file = file
+        obj.path = path
 
 
-def standardize_frame(frame: cv2.Mat):
+def standardize_frame(frame: cv2.Mat, max_size: int = max_output_size) -> tuple[int, cv2.Mat]:
     cols, rows, _ = frame.shape
     largest = max(cols, rows)
+    resize_factor = max_size / largest
 
     frame = cv2.resize(frame, [
-        int(max_output_size / largest * rows),
-        int(max_output_size / largest * cols)
+        int(resize_factor * rows),
+        int(resize_factor * cols)
     ])
 
     del cols, rows, largest
 
-    return frame
+    return (resize_factor, frame)

@@ -1,6 +1,9 @@
 import cv2
 
 import process_image
+from process_parser import get_args
+
+args = get_args()
 
 
 def call():
@@ -16,6 +19,8 @@ def call():
         del check
 
         output = process_image.call(frame)
+        del frame
+
         cv2.imshow(f"FD (Webcam)", output)
 
         del output
