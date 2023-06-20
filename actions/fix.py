@@ -1,5 +1,6 @@
-import process_models
-from process_parser import get_args
+from models_loader import loader
+from process.args import get_args
+from process.models import models_fix
 
 args = get_args()
 
@@ -21,22 +22,28 @@ def call():
 
         del totalIndices, totalNames
 
-        [process_models.models_fix(index, name)
+        [models_fix(index, name)
          for index, name in zip(args.indices, names)]
+        
+        del names
+
+        return
 
     if totalUnknowns > 0 and (totalNames == 1 or totalUnknowns == totalNames):
         del totalIndices
 
         names = get_names(totalUnknowns)
 
-        models = process_models.load_models()
+        models = loader.load()
 
-        for unknownIndex, unknown in enumerate(args.unkowns):
+        for unknownIndex, unknown in enumerate(args.unknowns):
             for index, model in enumerate(models):
-                if model.name == f'unknown-{unknown:03}':
-                    process_models.models_fix(index, names[unknownIndex])
+                if model.name == f'unknown-{unknown:05}':
+                    models_fix(index, names[unknownIndex])
 
-        del totalUnknowns, totalNames, models
+        del totalUnknowns, totalNames, models, names
+
+        return
 
 
 def get_names(compareTo: int):

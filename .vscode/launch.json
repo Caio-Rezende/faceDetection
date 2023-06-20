@@ -5,6 +5,24 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Python: Remake",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": ["remake", "-v"]
+    },
+    {
+      "name": "Python: Print",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": ["print"]
+    },
+    {
       "name": "Python: Detect",
       "type": "python",
       "request": "launch",
@@ -20,7 +38,7 @@
       "program": "${workspaceFolder}/main.py",
       "console": "integratedTerminal",
       "justMyCode": true,
-      "args": ["detect", "--save", "--save-unknown", "-v", "--slow"]
+      "args": ["detect", "--save", "--save-unknown", "--view", "--slow", "-v"]
     },
     {
       "name": "Python: Webcam",
@@ -29,16 +47,7 @@
       "program": "${workspaceFolder}/main.py",
       "console": "integratedTerminal",
       "justMyCode": true,
-      "args": ["webcam"]
-    },
-    {
-      "name": "Python: Remake",
-      "type": "python",
-      "request": "launch",
-      "program": "${workspaceFolder}/main.py",
-      "console": "integratedTerminal",
-      "justMyCode": true,
-      "args": ["remake"]
+      "args": ["webcam", "-v"]
     },
     {
       "name": "Python: Fix",
@@ -47,7 +56,7 @@
       "program": "${workspaceFolder}/main.py",
       "console": "integratedTerminal",
       "justMyCode": true,
-      "args": ["fix", "-i", "82", "102", "-n", "person"]
+      "args": ["fix", "-i", "66", "-n", "person"]
     },
     {
       "name": "Python: View",
@@ -56,7 +65,16 @@
       "program": "${workspaceFolder}/main.py",
       "console": "integratedTerminal",
       "justMyCode": true,
-      "args": ["view", "1"]
+      "args": ["view", "1", "-v"]
+    },
+    {
+      "name": "Python: Clear",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": ["clear"]
     }
   ]
 }

@@ -1,24 +1,38 @@
-import detect
-import fix
-import process_models
-import view
-import webcam
-from process_parser import get_args
+#!/usr/bin/env python
+import dlib
+
+import actions.clear as clear
+import actions.detect as detect
+import actions.fix as fix
+import actions.print as action_print
+import actions.remake as remake
+import actions.view as view
+import actions.webcam as webcam
+
+from process.args import get_args
 
 args = get_args()
 
 
 def main():
-    if args.module == 'detect':
-        detect.call()
+    if hasattr(args, 'model') and args.model == 'cnn':
+        action_print.verbose("for cnn model, dlib could find devices: {}, cuda: {}".format(
+            dlib.cuda.get_num_devices(), dlib.DLIB_USE_CUDA))
+
+    if args.module == 'print':
+        action_print.call()
+        return
+
+    if args.module == 'clear':
+        clear.call()
+        return
+
+    if args.module == 'remake':
+        remake.call()
         return
 
     if args.module == 'webcam':
         webcam.call()
-        return
-
-    if args.module == 'remake':
-        process_models.remake()
         return
 
     if args.module == 'view':
@@ -27,6 +41,10 @@ def main():
 
     if args.module == 'fix':
         fix.call()
+        return
+
+    if args.module == 'detect':
+        detect.call()
         return
 
 

@@ -36,7 +36,7 @@ After this run, it is supposed to create in assets/models a models.pkl file, whi
 
 For now, it is only looking for "jpg" images and it uses the file name (if in the assests/models folder) or the folder name (if it's in assets/models/subfolder).
 
-`python main.py -r`
+`python main.py remake`
 
 ### detect
 
@@ -70,14 +70,36 @@ Check the original file the originated one of the index in models.
 
 `python main.py view 10`
 
+### print
+
+Prints all saved models with their id, path and name.
+
+`python main.py print`
+
+### clear
+
+Removes from the models all unknowns that doesn't have ate least X occurencies. Where X is the threshold (default=10).
+
+`python main.py clear`
+
 ## Improvements
 
 I tried applying multiprocessing for the models generation, but it just bottlenecked the gpu, for some files I tried expected more than 12Gb of memory available. So, for now it was disabled.
 
-[] improve the models, reducing their size for an optimal run
+[x] improve the models, reducing their size for an optimal run
+
+    - It happened to have lower accuracy as well, so I kept the original file for the face_recognition and only reduced for the viewing or thumbnail
 
 [] make a choice of only one lib for face recognition (at this point there are 2 libs for that in play - opencv-python and face_recognition)
 
-[] allow argument choices for cpu/gpu
+    - OpenCV was kept at bay for now for the processing the faces, as using only the face_recognition for the detection and matches are more intuitive and compatible
 
-[] outputs the generated matches to file
+[x] allow argument choices for cpu/gpu
+
+    - use the --model flag to state your choice [cnn/hog]
+
+[x] outputs the generated matches to file
+
+    - currently saving a list of matches with name and their thumbnails
+
+[] make the unknowns presentation interactive, so you can name them on the go

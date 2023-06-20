@@ -1,14 +1,11 @@
 import cv2
 
-import process_match
-from definitions import standardize_frame, FaceLocation
-from process_parser import get_args
+import process.match as process_match
+
+from definitions import standardize_frame, FaceLocation, box_thickness, box_color, font
+from process.args import get_args
 
 args = get_args()
-
-box_thickness = 1
-box_color = (0, 0, 255)
-font = cv2.FONT_HERSHEY_DUPLEX
 
 
 def call(frame: cv2.Mat, path: str) -> cv2.Mat:
