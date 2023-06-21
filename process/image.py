@@ -2,8 +2,9 @@ import cv2
 
 import process.match as process_match
 
-from definitions import standardize_frame, FaceLocation, box_thickness, box_color, font
+from definitions import standardize_frame
 from process.args import get_args
+from process.draw import draw_box_face
 
 args = get_args()
 
@@ -23,16 +24,3 @@ def call(frame: cv2.Mat, path: str) -> cv2.Mat:
     del matches, resize_factor
 
     return frame
-
-
-def draw_box_face(frame: cv2.Mat, face_location: FaceLocation, name: str | None):
-    (top, right, bottom, left) = face_location
-
-    cv2.rectangle(frame, (left, top), (right, bottom),
-                  box_color, box_thickness)
-
-    if not name is None and name.count('unknown') == 0:
-        cv2.putText(frame, name, (left + 6, bottom - 6),
-                    font, 1.0, (255, 255, 255), 1)
-
-    del top, right, bottom, left

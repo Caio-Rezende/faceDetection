@@ -6,6 +6,7 @@ import face_recognition
 from definitions import FaceLocation, FaceEncoding, RecognitionModel, default_match_name
 from models_loader import loader
 from process.args import get_args
+from process.draw import draw_face_image
 from process.models import append_model,  create_model
 
 args = get_args()
@@ -25,23 +26,17 @@ def call(frame: cv2.Mat, path: str) -> list[RecognitionModel]:
                              name=name, accuracy=1-accuracy, path=path)
         matches.append(model)
 
-        if (not name is None) and args.save:
+        if not name is None and args.save:
             append_model(models, model, frame[:, :, ::-1])
         else:
-            if args.unknown:
-                unkowns = set([a.name for a in
-                               filter(lambda a: a.name.count('unknown') > 0, models)])
-                if len(unkowns) == 0:
-                    unknownIndex = 0
-                else:
-                    unknownIndex = 1 + max(
-                        [int(unknown.replace('unknown-', '')) for unknown in unkowns])
-                name = f'unknown-{unknownIndex:05}'
-                model.name = name
-                append_model(models, model, frame[:, :, ::-1])
-                del unkowns, unknownIndex
+            if name is None and (args.unknown or args.interactive):
+                if args.interactive:
+                    model.name = get_interactive_name(model)
 
-        del name, model
+                if (model.name is None and args.unknown) or (not model.name is None and args.interactive):
+                    append_model(models, model, frame[:, :, ::-1])
+
+        del name
 
     del face_locations, face_encodings
 
@@ -55,7 +50,7 @@ def call(frame: cv2.Mat, path: str) -> list[RecognitionModel]:
 
 def get_match_name(face_encoding: FaceEncoding) -> tuple[float, str | None]:
     models = loader.load()
-    known_models = [model.encoding for model in models]
+    known_models = [m.encoding for m in models]
 
     accuracy = 0
     name = default_match_name
@@ -82,3 +77,21 @@ def frame_match(frame: cv2.Mat) -> tuple[FaceLocation, FaceEncoding]:
         frame, face_locations)
 
     return face_locations, face_encodings
+
+
+def get_interactive_name(model: RecognitionModel) -> str | None:
+    name = ''
+    repeat = True
+    while repeat:
+        print('\nPress any key after taking a look to this image with the face box.')
+        window_name = draw_face_image(model)
+        cv2.waitKey(0)
+        cv2.destroyWindow(window_name)
+        name = input(
+            f'for the displayed image with #{model.id}, \n\tsay it\'s name, leave blank to skip or write repeat\n\t>>>')
+        if name != 'repeat':
+            repeat = False
+        if name == '':
+            name = default_match_name
+
+    return name

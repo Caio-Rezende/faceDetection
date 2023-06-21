@@ -32,6 +32,15 @@
       "args": ["detect", "--save", "--save-unknown"]
     },
     {
+      "name": "Python: Detect Interactive",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": ["detect", "-i", "-v"]
+    },
+    {
       "name": "Python: Detect with all flags",
       "type": "python",
       "request": "launch",

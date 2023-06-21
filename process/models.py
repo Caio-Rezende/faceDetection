@@ -3,7 +3,7 @@ import cv2
 import os
 
 from actions.print import verbose
-from definitions import RecognitionModel, standardize_frame, FaceEncoding, FaceLocation, outputs_dir, thumbnail_size
+from definitions import RecognitionModel, standardize_frame, FaceEncoding, FaceLocation, outputs_dir, thumbnail_size, default_match_name
 from models_loader import loader
 from process.args import get_args
 
@@ -13,6 +13,9 @@ args = get_args()
 def append_model(models: list[RecognitionModel], model: RecognitionModel, frame: cv2.Mat):
     if any([a.name == model.name and a.path == model.path for a in models]):
         return
+
+    if model.name == default_match_name:
+        prepare_unknown(models, model)
 
     (top, right, bottom, left) = model.location
     dir, path = model.save_path()
@@ -27,6 +30,18 @@ def append_model(models: list[RecognitionModel], model: RecognitionModel, frame:
     models.append(model)
     verbose(model)
     del top, right, bottom, left, dir, path, cropped, resize_factor, resized
+
+
+def prepare_unknown(models: list[RecognitionModel], model: RecognitionModel):
+    unkowns = set([a.name for a in
+                   filter(lambda a: a.name.count('unknown') > 0, models)])
+    if len(unkowns) == 0:
+        unknownIndex = 0
+    else:
+        unknownIndex = 1 + max(
+            [int(unknown.replace('unknown-', '')) for unknown in unkowns])
+    model.name = f'unknown-{unknownIndex:05}'
+    del unkowns, unknownIndex
 
 
 def models_fix(index: int, name: str):

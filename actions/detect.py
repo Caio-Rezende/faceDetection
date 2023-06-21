@@ -10,24 +10,6 @@ from process.args import get_args
 args = get_args()
 
 
-def read_image(path: str, name: str) -> None:
-    img = cv2.imread(path)
-    if img is None:
-        return
-
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-    output = image.call(img, path)
-    del img
-
-    if args.view:
-        # from face_recognition format to cv2 format
-        output = output[:, :, ::-1]
-
-        cv2.imshow(f"FD ({name})", output)
-    del output
-
-
 def call():
     start = time.time()
     for dir in args.path:
@@ -45,9 +27,13 @@ def process_dir(dir: str):
 
         if os.path.isfile(path):
             start = time.time()
-            read_image(path, name)
             verbose(
-                f'\t reading file #{index + 1}/{maxIndex + 1} - {path} - {int(time.time()-start)*1000}ms')
+                f'\t▶ reading file #{index + 1}/{maxIndex + 1} - {path}')
+            process_image(path, name)
+            verbose(
+                f'\t\t● total time #{index + 1}/{maxIndex + 1}: {int(time.time()-start)*1000}ms'
+            )
+            del start
 
         if os.path.isdir(path):
             process_dir(path)
@@ -59,3 +45,21 @@ def process_dir(dir: str):
             cv2.destroyAllWindows()
 
     del maxIndex
+
+
+def process_image(path: str, name: str) -> None:
+    img = cv2.imread(path)
+    if img is None:
+        return
+
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    output = image.call(img, path)
+    del img
+
+    if args.view:
+        # from face_recognition format to cv2 format
+        output = output[:, :, ::-1]
+
+        cv2.imshow(f"FD ({name})", output)
+    del output

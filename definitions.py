@@ -53,7 +53,7 @@ class RecognitionModel:
         return dir, path
 
     def __str__(self) -> str:
-        return f'#{self.id} {self.name}\n\taccuracy:{int(self.accuracy * 100):02}%\n\tpath:{self.path}'
+        return f'\n#{self.id} {self.name}\n\taccuracy:{int(self.accuracy * 100):02}%\n\tpath:{self.path}\n'
 
 
 class SingletonMeta(type):

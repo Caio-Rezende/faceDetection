@@ -8,7 +8,7 @@ samples_dir = "./assets/samples"
 def get_args():
     parser = argparse.ArgumentParser(
         prog='faceDetection',
-        description='Detects people')
+        description='Detects people', add_help="alert: the first detection will take longer for the models gonna be load to memory/gpu")
 
     subparsers = parser.add_subparsers(required=True, dest='module')
 
@@ -49,6 +49,10 @@ def get_args():
                                dest='view',
                                action='store_true',
                                help='View the matches')
+    parser_detect.add_argument('-i', '--interactive',
+                               dest='interactive',
+                               action='store_true',
+                               help='Allow to say who a face is when unkown - console interaction')
 
     parser_fix = subparsers.add_parser('fix')
     parser_fix.add_argument(
@@ -72,7 +76,7 @@ def add_processing_options(parser: argparse.ArgumentParser):
     parser.add_argument('-t', '--tolerance',
                         dest='tolerance', type=float, default=0.35, help='The tolerance distance for the face detection to identify a match')
     parser.add_argument('-v', '--verbose',
-                        dest='verbose', type=bool, default=False, help='Display running info')
+                        dest='verbose', action='store_true', help='Display running info')
 
 
 def add_save_options(parser: argparse.ArgumentParser):
