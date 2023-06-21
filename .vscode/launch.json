@@ -56,7 +56,7 @@
       "program": "${workspaceFolder}/main.py",
       "console": "integratedTerminal",
       "justMyCode": true,
-      "args": ["webcam", "-v"]
+      "args": ["webcam", "--view"]
     },
     {
       "name": "Python: Fix",

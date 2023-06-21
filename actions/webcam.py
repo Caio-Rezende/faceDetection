@@ -19,7 +19,7 @@ def call():
 
         del check
 
-        output = image.call(frame)
+        output = image.call(frame, 'webcam')
         del frame
 
         cv2.imshow(f"FD (Webcam)", output)

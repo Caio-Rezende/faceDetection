@@ -35,6 +35,18 @@ def get_args():
     parser_webcam = subparsers.add_parser('webcam')
     add_processing_options(parser_webcam)
     add_save_options(parser_webcam)
+    parser_webcam.add_argument('--slow',
+                               dest='slow',
+                               action='store_true',
+                               help='View the matches 10 by 10')
+    parser_webcam.add_argument('--view',
+                               dest='view',
+                               action='store_true',
+                               help='View the matches')
+    parser_webcam.add_argument('-i', '--interactive',
+                               dest='interactive',
+                               action='store_true',
+                               help='Allow to say who a face is when unkown - console interaction')
 
     parser_detect = subparsers.add_parser('detect')
     add_processing_options(parser_detect)
