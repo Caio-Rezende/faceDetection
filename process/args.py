@@ -29,42 +29,24 @@ def get_args():
                              action='store_true',
                              help='View the files 10 by 10')
 
-    parser_remake = subparsers.add_parser('remake')
-    add_processing_options(parser_remake)
+    parser_train = subparsers.add_parser('train')
+    add_processing_options(parser_train)
+    parser_train.add_argument('--remake',
+                              dest='remake',
+                              action='store_true',
+                              help='Resets the stored saved models')
 
     parser_webcam = subparsers.add_parser('webcam')
     add_processing_options(parser_webcam)
     add_save_options(parser_webcam)
-    parser_webcam.add_argument('--slow',
-                               dest='slow',
-                               action='store_true',
-                               help='View the matches 10 by 10')
-    parser_webcam.add_argument('--view',
-                               dest='view',
-                               action='store_true',
-                               help='View the matches')
-    parser_webcam.add_argument('-i', '--interactive',
-                               dest='interactive',
-                               action='store_true',
-                               help='Allow to say who a face is when unkown - console interaction')
+    add_view_options(parser_webcam)
 
     parser_detect = subparsers.add_parser('detect')
     add_processing_options(parser_detect)
     add_save_options(parser_detect)
+    add_view_options(parser_detect)
     parser_detect.add_argument('path', type=str,
                                help='choose where the files are being read from', default=[samples_dir], nargs='*')
-    parser_detect.add_argument('--slow',
-                               dest='slow',
-                               action='store_true',
-                               help='View the matches 10 by 10')
-    parser_detect.add_argument('--view',
-                               dest='view',
-                               action='store_true',
-                               help='View the matches')
-    parser_detect.add_argument('-i', '--interactive',
-                               dest='interactive',
-                               action='store_true',
-                               help='Allow to say who a face is when unkown - console interaction')
 
     parser_fix = subparsers.add_parser('fix')
     parser_fix.add_argument(
@@ -74,7 +56,7 @@ def get_args():
     parser_fix.add_argument('-n', '--names', dest='names',
                             nargs='+', type=str, action='extend')
 
-    del subparsers, parser_detect, parser_fix, parser_view, parser_remake, parser_webcam
+    del subparsers, parser_detect, parser_fix, parser_view, parser_train, parser_webcam
 
     return parser.parse_args(sys.argv[1:])
 
@@ -100,3 +82,18 @@ def add_save_options(parser: argparse.ArgumentParser):
                         dest='unknown',
                         action='store_true',
                         help='Saves in models for next use even if it didn\'t match any')
+
+
+def add_view_options(parser: argparse.ArgumentParser):
+    parser.add_argument('--slow',
+                        dest='slow',
+                        action='store_true',
+                        help='View the matches 10 by 10')
+    parser.add_argument('--view',
+                        dest='view',
+                        action='store_true',
+                        help='View the matches')
+    parser.add_argument('-i', '--interactive',
+                        dest='interactive',
+                        action='store_true',
+                               help='Allow to say who a face is when unkown - console interaction')

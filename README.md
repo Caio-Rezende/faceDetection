@@ -26,7 +26,7 @@ Run in command line the main.py\*
 
 \*For VSCode, it's already configured the launch.json for F5 starting the project
 
-### remake
+### TRAIN
 
 First to be run, it reads all images in the assets/models folder and create their encoding for the face match algorithm. It also saves the thumbnails in the outputs folder.
 
@@ -36,51 +36,120 @@ After this run, it is supposed to create in assets/models a models.pkl file, whi
 
 For now, it is only looking for "jpg" images and it uses the file name (if in the assests/models folder) or the folder name (if it's in assets/models/subfolder).
 
-`python main.py remake`
+```
+python main.py train [-h] [--model {cnn,hog}] [-t TOLERANCE] [-v] [--remake]
 
-### detect
+options:
+  -h, --help            show this help message and exit
+  --model {cnn,hog}     Determine wich model the face_detection will use for it's algorithm
+  -t TOLERANCE, --tolerance TOLERANCE
+                        The tolerance distance for the face detection to identify a match
+  -v, --verbose         Display running info
+  --remake              Resets the stored saved models
+```
+
+### DETECT
 
 After you have your models processed, this instruction runs through the files in assets/samples folder, and do the face matching. It will recognize all faces and compare to the ones in the assets/models.
 
 For now, for each file, it will display a window with the faces recognized displaying their names or "unkown" otherwise.
 
-`python main.py detect --save --save-unknown`
+```
+python main.py detect [-h] [--model {cnn,hog}] [-t TOLERANCE] [-v] [--save] [--save-unknown] [--slow] [--view] [-i] [path ...]
+
+positional arguments:
+  path                  choose where the files are being read from
+
+options:
+  -h, --help            show this help message and exit
+  --model {cnn,hog}     Determine wich model the face_detection will use for it's algorithm
+  -t TOLERANCE, --tolerance TOLERANCE
+                        The tolerance distance for the face detection to identify a match
+  -v, --verbose         Display running info
+  --save                Saves matches in models for next use
+  --save-unknown        Saves in models for next use even if it didn't match any
+  --slow                View the matches 10 by 10
+  --view                View the matches
+  -i, --interactive     Allow to say who a face is when unkown - console interaction
+```
 
 \*If you use the save flag, it will add to the models the matches.
 
-### webcam
+### WEBCAM
 
 After you have your models processed, this instruction initializes a first webcam detected and live stream it to face recognition. It displays a window with the faces recognized displaying their names or "unkown" otherwise.
 
-`python main.py webcam`
+```
+python main.py webcam [-h] [--model {cnn,hog}] [-t TOLERANCE] [-v] [--save] [--save-unknown] [--slow] [--view] [-i]
 
-### fix
+options:
+  -h, --help            show this help message and exit
+  --model {cnn,hog}     Determine wich model the face_detection will use for it's algorithm
+  -t TOLERANCE, --tolerance TOLERANCE
+                        The tolerance distance for the face detection to identify a match
+  -v, --verbose         Display running info
+  --save                Saves matches in models for next use
+  --save-unknown        Saves in models for next use even if it didn't match any
+  --slow                View the matches 10 by 10
+  --view                View the matches
+  -i, --interactive     Allow to say who a face is when unkown - console interaction
+```
+
+### FIX
 
 If during a run you chose to save the matches something went amiss, just run the fix with the index and the correct name, for the models to be updated.
 
-`python main.py fix -i 10 -n person`
-`python main.py fix -i 10 20 -n person person2`
-`python main.py fix -i 10 11 -n person`
+```
+python main.py fix [-h] [-i [INDICES ...]] [-u [UNKNOWNS ...]] [-n NAMES [NAMES ...]]
+
+options:
+  -h, --help            show this help message and exit
+  -i [INDICES ...], --indices [INDICES ...]
+  -u [UNKNOWNS ...], --unknowns [UNKNOWNS ...]
+  -n NAMES [NAMES ...], --names NAMES [NAMES ...]
+```
 
 \* this will search for the 10 item in the models list, and update it with the correct name, and also move the thumbnail to the correct folder.
 
-### view
+### VIEW
 
 Check the original file the originated one of the index in models.
 
-`python main.py view 10`
+```
+python main.py view [-h] [--slow] indices [indices ...]
 
-### print
+positional arguments:
+  indices     View the original file for the model index
+
+options:
+  -h, --help  show this help message and exit
+  --slow      View the files 10 by 10
+```
+
+### PRINT
 
 Prints all saved models with their id, path and name.
 
-`python main.py print`
+```
+python main.py print [-h]
 
-### clear
+options:
+  -h, --help  show this help message and exit
+```
+
+### CLEAR
 
 Removes from the models all unknowns that doesn't have ate least X occurencies. Where X is the threshold (default=10).
 
-`python main.py clear`
+```
+python main.py clear [-h] [threshold]
+
+positional arguments:
+  threshold   clear all models where matches are less then threshold
+
+options:
+  -h, --help  show this help message and exit
+```
 
 ## Improvements
 
@@ -102,4 +171,6 @@ I tried applying multiprocessing for the models generation, but it just bottlene
 
     - currently saving a list of matches with name and their thumbnails
 
-[] make the unknowns presentation interactive, so you can name them on the go
+[x] make the unknowns presentation interactive, so you can name them on the go
+
+[x] allow for models train without losing already saved ones

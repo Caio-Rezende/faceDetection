@@ -13,13 +13,10 @@ from process.models import append_model, create_model
 args = get_args()
 
 
-def call(remake: bool = False) -> list[RecognitionModel]:
-    if not remake:
-        return loader.load()
-
+def call() -> list[RecognitionModel]:
     start = time.time()
 
-    models = []
+    models = loader.load() if not args.remake else []
     process_files_dir(samples_dir, models)
     loader.save(models)
 
@@ -80,7 +77,8 @@ def match_first(path: str, models: list[RecognitionModel], name: str, parent: st
 
     end = time.time()
 
-    verbose("load model {} time elapsed {} ms".format(path, int(end-start)*1000))
+    verbose("load model {} time elapsed {} ms".format(
+        path, int(end-start)*1000))
 
     if len(face_encodings) > 0:
         append_model(

@@ -5,7 +5,7 @@ import actions.clear as clear
 import actions.detect as detect
 import actions.fix as fix
 import actions.print as action_print
-import actions.remake as remake
+import actions.train as train
 import actions.view as view
 import actions.webcam as webcam
 
@@ -27,8 +27,8 @@ def main():
         clear.call()
         return
 
-    if args.module == 'remake':
-        remake.call()
+    if args.module == 'train':
+        train.call()
         return
 
     if args.module == 'webcam':
