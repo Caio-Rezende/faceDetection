@@ -41,6 +41,11 @@ def get_args():
     add_save_options(parser_webcam)
     add_view_options(parser_webcam)
 
+    parser_desktop = subparsers.add_parser('desktop')
+    add_processing_options(parser_desktop)
+    add_save_options(parser_desktop)
+    add_view_options(parser_desktop)
+
     parser_detect = subparsers.add_parser('detect')
     add_processing_options(parser_detect)
     add_save_options(parser_detect)

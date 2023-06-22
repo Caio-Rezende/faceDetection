@@ -16,6 +16,8 @@ Face_recognition
 
 dlib\*
 
+Pillow
+
 \*watch out for their docs on installing with cuda enabled (pain in the ass alert!!)
 
 ## Instructions
@@ -81,6 +83,26 @@ After you have your models processed, this instruction initializes a first webca
 
 ```
 python main.py webcam [-h] [--model {cnn,hog}] [-t TOLERANCE] [-v] [--save] [--save-unknown] [--slow] [--view] [-i]
+
+options:
+  -h, --help            show this help message and exit
+  --model {cnn,hog}     Determine wich model the face_detection will use for it's algorithm
+  -t TOLERANCE, --tolerance TOLERANCE
+                        The tolerance distance for the face detection to identify a match
+  -v, --verbose         Display running info
+  --save                Saves matches in models for next use
+  --save-unknown        Saves in models for next use even if it didn't match any
+  --slow                View the matches 10 by 10
+  --view                View the matches
+  -i, --interactive     Allow to say who a face is when unkown - console interaction
+```
+
+### WEBCAM
+
+After you have your models processed, this instruction initializes a desktop feed detection and live stream it to face recognition. It displays a window with the faces recognized displaying their names.
+
+```
+python main.py desktop [-h] [--model {cnn,hog}] [-t TOLERANCE] [-v] [--save] [--save-unknown] [--slow] [--view] [-i]
 
 options:
   -h, --help            show this help message and exit

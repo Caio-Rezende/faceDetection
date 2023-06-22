@@ -3,6 +3,7 @@ import dlib
 
 import actions.clear as clear
 import actions.detect as detect
+import actions.desktop as desktop
 import actions.fix as fix
 import actions.print as action_print
 import actions.train as train
@@ -33,6 +34,10 @@ def main():
 
     if args.module == 'webcam':
         webcam.call()
+        return
+
+    if args.module == 'desktop':
+        desktop.call()
         return
 
     if args.module == 'view':
