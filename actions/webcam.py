@@ -2,6 +2,7 @@ import cv2
 
 import process.image as image
 
+from definitions import standardize_frame
 from process.args import get_args
 
 args = get_args()
@@ -19,8 +20,12 @@ def call():
 
         del check
 
-        output = image.call(frame, 'webcam')
+        factor, standardFrame = standardize_frame(frame, 512)
+
         del frame
+
+        output = image.call(standardFrame, 'webcam')
+        del standardFrame
 
         cv2.imshow(f"FD (Webcam)", output)
 
