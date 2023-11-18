@@ -60,13 +60,16 @@ def get_match_name(face_encoding: FaceEncoding) -> tuple[float, str | None]:
     face_distances = face_recognition.face_distance(
         known_models, face_encoding)
 
-    best_match_index = np.argmin(face_distances)
+    if face_distances.size > 0:
+        best_match_index = np.argmin(face_distances)
 
-    if matches[best_match_index]:
-        accuracy = face_distances[best_match_index]
-        name = models[best_match_index].name
+        if matches[best_match_index]:
+            accuracy = face_distances[best_match_index]
+            name = models[best_match_index].name
+        
+        del best_match_index
 
-    del matches, face_distances, best_match_index, models, known_models
+    del matches, face_distances, models, known_models
 
     return accuracy, name
 
