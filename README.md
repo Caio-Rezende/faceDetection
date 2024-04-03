@@ -4,7 +4,13 @@ Python project for face detection
 
 ## Requirements
 
-Python
+´´´
+$ python3.11 -m venv .venv
+$ . ./.venv/bin/activate
+(venv) $ python main.py webcam -v
+´´´
+
+Python < 3.12
 
 Opencv-python (cv2)
 
